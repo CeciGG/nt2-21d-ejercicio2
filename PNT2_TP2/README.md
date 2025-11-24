@@ -22,6 +22,10 @@ See [Vite Configuration Reference](https://vite.dev/config/).
 ## Project Setup
 
 ```sh
+cd  PNT2_TP2
+```
+
+```sh
 npm install
 ```
 
