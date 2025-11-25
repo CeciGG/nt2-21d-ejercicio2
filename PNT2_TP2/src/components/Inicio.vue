@@ -1,7 +1,9 @@
 <template>
     <div class="container-fluid mt-3" id="app">
-        <input type="text" class="form-control" v-model="criterioDeBusqueda"
+        <input type="text" class="form-control mb-3" v-model="criterioDeBusqueda"
         placeholder="Ingresar un criterio de busqueda...">
+        <input type="text" class="form-control mb-3" name="nombre" placeholder="Nombre" v-model="busquedaNombre">
+        <input type="number" class="form-control" name="dni" placeholder="DNI" v-model="busquedaDNI">
         <br>
         <div class="card-deck m-0">
             <div class="row">
@@ -24,7 +26,8 @@ export default {
     data() {
         return {
             criterioDeBusqueda: '',
-            //Aquí, en este array es donde tienen que agregar su información
+            busquedaNombre: '',
+            busquedaDNI:'',
             personas: [
                 {
                     nombre: "Daniel",
@@ -45,25 +48,48 @@ export default {
                     dni: "87654321"
                 },
                 {
-                    nombre: "...",
-                    apellido: "...",
-                    correo: "...",
-                    dni: "..."
+                    nombre: "Cecilia",
+                    apellido: "Granda",
+                    correo: "ceciliagranda04@gmail.com",
+                    dni: "12345678"
                 },
             ]
         }
     },
     computed: {
         personasFiltradas() {
-            return this.personas.filter((persona) => {
-                let registroCompleto = `${persona.nombre} ${persona.apellido} ${persona.dni} ${persona.correo}`
-                return registroCompleto.toLowerCase().includes(this.criterioDeBusqueda.toLowerCase())
-            });
+            if(this.criterioDeBusqueda !== ''){
+                return this.personas.filter((persona) => {
+                    let registroCompleto = `${persona.nombre} ${persona.apellido} ${persona.dni} ${persona.correo}`
+                    return registroCompleto.toLowerCase().includes(this.criterioDeBusqueda.toLowerCase())
+                });
+            }else{
+                let filtroNombre = this.filtrarNombres(this.personas)
+                let filtroDNI = this.filtrarDNI(filtroNombre)
+                return filtroDNI
+            }
+            
         }
     },
     methods: {
+
         getNombreCompleto(persona) {
             return `${persona.nombre} ${persona.apellido}`
+        },
+        filtrarNombres(personas){
+            if(this.busquedaNombre === '') return personas
+            return personas.filter((persona) =>{
+                let registroNombre = `${persona.nombre} ${persona.apellido}`
+                return registroNombre.toLowerCase().includes(this.busquedaNombre.toLowerCase())
+            }) 
+        },
+        filtrarDNI(personas){
+            console.log("busqueda DNI")
+            if(this.busquedaDNI === '') return personas
+            return personas.filter((persona) =>{
+                let registroDNI = `${persona.dni}`
+                return registroDNI.toLowerCase().includes(this.busquedaDNI)
+            }) 
         }
     }
 }
