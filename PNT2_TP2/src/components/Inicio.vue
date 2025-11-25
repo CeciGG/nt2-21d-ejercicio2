@@ -4,6 +4,9 @@
         placeholder="Ingresar un criterio de busqueda...">
         <input type="text" class="form-control mb-3" name="nombre" placeholder="Nombre" v-model="busquedaNombre">
         <input type="number" class="form-control" name="dni" placeholder="DNI" v-model="busquedaDNI">
+        <div v-if="mostrarAdv" class="alert alert-warning mt-3" role="alert">
+                Debe ingresar al menos 3 caracteres
+        </div>
         <br>
         <div class="card-deck m-0">
             <div class="row">
@@ -57,8 +60,14 @@ export default {
         }
     },
     computed: {
+        mostrarAdv(){
+            const condicionNom = !!this.busquedaNombre && this.busquedaNombre.length < 3
+            const dni = this.busquedaDNI + ""
+            const condicionDNI = !!dni && dni.length < 3
+            return condicionNom || condicionDNI
+        },
         personasFiltradas() {
-            if(this.criterioDeBusqueda !== ''){
+            if(this.criterioDeBusqueda){
                 return this.personas.filter((persona) => {
                     let registroCompleto = `${persona.nombre} ${persona.apellido} ${persona.dni} ${persona.correo}`
                     return registroCompleto.toLowerCase().includes(this.criterioDeBusqueda.toLowerCase())
@@ -72,20 +81,18 @@ export default {
         }
     },
     methods: {
-
         getNombreCompleto(persona) {
             return `${persona.nombre} ${persona.apellido}`
         },
         filtrarNombres(personas){
-            if(this.busquedaNombre === '') return personas
+            if(!this.busquedaNombre) return personas
             return personas.filter((persona) =>{
-                let registroNombre = `${persona.nombre} ${persona.apellido}`
+                let registroNombre = this.getNombreCompleto(persona)
                 return registroNombre.toLowerCase().includes(this.busquedaNombre.toLowerCase())
             }) 
         },
         filtrarDNI(personas){
-            console.log("busqueda DNI")
-            if(this.busquedaDNI === '') return personas
+            if(!this.busquedaDNI) return personas
             return personas.filter((persona) =>{
                 let registroDNI = `${persona.dni}`
                 return registroDNI.toLowerCase().includes(this.busquedaDNI)
